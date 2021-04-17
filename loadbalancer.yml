@@ -1,0 +1,38 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+          - secure.yml
+  tasks:
+          - name: Creating Load Balancer for launched AWS instances
+            ec2_elb_lb:
+                    name: ec2-lb
+                    state: present
+                    aws_access_key: "{{ username }}"
+                    aws_secret_key: "{{ password }}"
+               
+                    cross_az_load_balancing: yes
+                  
+                    scheme: internet-facing
+                    listeners:
+                            - protocol: http
+                              load_balancer_port: 80
+                              instance_port: "{{ myport }}"
+                    health_check:
+                            ping_protocol: http
+                            ping_port: "{{ myport }}"
+                            ping_path: "/index.php"
+                            response_timeout: 5
+                            interval: 30
+                            unhealthy_threshold: 2
+                            healthy_threshold: 10
+
+            - name: add webservers to AWS ELB
+              local_action: ec2_elb
+              args:
+                    aws_access_key: "{{ username }}"
+                    aws_secret_key: "{{ password }}"
+                    instance_id: "{{ item }}"
+                    ec2_elbs: ec2-lb
+                    state: present
+                    
+              loop: "{{ id }}"

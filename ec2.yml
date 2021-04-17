@@ -1,0 +1,29 @@
+- hosts: localhost
+  vars_files:
+          - secure.yml
+  tasks:
+          - name: Provisioning EC2 instance in AWS
+            ec2:
+                    key_name: "newkey"
+                    instance_type: "t2.micro"
+                    image: "ami-0ebc1ac48dfd14136"
+                    count: 1
+                    wait: yes
+                    #vpc_subnet_id: "vpc-7d9e8315"
+                    region: "ap-south-1"
+                    group_id: "sg-fb621899"
+                    aws_access_key: "{{ username }}"
+                    aws_secret_key: "{{ password }}"
+            register: ec2
+          - name: Add new instance to host group
+            add_host: 
+                        hostname: "{{ item.public_ip }}" 
+            loop: "{{ ec2.instances }}"
+          
+          - name: Waiting for SSH to come up
+            wait_for: 
+                      host: "{{ item.public_dns_name }}"
+                      port: 22
+                      state: started
+            loop: "{{ ec2.instances }}"       
+

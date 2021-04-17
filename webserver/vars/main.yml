@@ -1,0 +1,5 @@
+---
+my_port: 80
+my_path: /var/www/html/
+
+# vars fie for webserver

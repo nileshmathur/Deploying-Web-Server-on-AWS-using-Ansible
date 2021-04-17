@@ -1,0 +1,12 @@
+- hosts: webserver
+  gather_facts: no
+  tasks:
+          - command: curl http://ipv4.icanhazip.com
+            register: x
+          - debug:
+                  var:  x.stdout          
+          - name: Pass variables to role
+                include_role:
+                    name: Webserver
+                vars:
+                    my_ip: x.stdout
