@@ -1,3 +1,3 @@
 # Deploying-Web-Server-on-AWS-using-Ansible
 
-![Image](https://www.linkedin.com/pulse/deploying-web-server-aws-using-ansible-nilesh-mathur/)
+![ALT_TEXT](https://www.linkedin.com/pulse/deploying-web-server-aws-using-ansible-nilesh-mathur/)
